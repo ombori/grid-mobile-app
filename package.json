@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
+  "application-type": "mobile",
   "scripts": {
     "bootstrap": "mkdir src/settings && cp default.settings.json src/settings/index.json",
     "start": "yarn schema && REACT_APP_MESSAGING_URL=ws://localhost:8088 react-scripts start",
