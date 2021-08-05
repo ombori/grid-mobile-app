@@ -4,11 +4,8 @@ import { useSettings } from '@ombori/ga-settings';
 import { useStatus, useSubscribe, usePublish, setSpaceId } from '@ombori/ga-messaging';
 import { Settings } from './schema';
 
-// Connect to the message bus if the page is loaded from grid-os device
-const { hostname } = document.location;
-if (hostname !== 'localhost') {
-  setSpaceId(`ws://${hostname}:19891`);
-}
+// connect to anonymous message bus on the same grid-os host
+setSpaceId(`$samehost/anonymous`);
 
 function App() {
   const settings = useSettings<Settings>();
