@@ -1,0 +1,58 @@
+import React, { useCallback, useState } from 'react';
+import styled from 'styled-components';
+import { useSettings } from '@ombori/ga-settings';
+import { useStatus, useSubscribe, usePublish, setSpaceId } from '@ombori/ga-messaging';
+import { Settings } from './schema';
+
+// Connect to the message bus if the page is loaded from grid-os device
+const { hostname } = document.location;
+if (hostname !== 'localhost') {
+  setSpaceId(`ws://${hostname}:19891`);
+}
+
+function App() {
+  const settings = useSettings<Settings>();
+  const connected = useStatus();
+  const send = usePublish();
+  const [pongReceived, setPongReceived] = useState<Boolean>(false);
+
+  // send ping message when button is pressed
+  const ping = useCallback(() => {
+    send('Test.ping', { hello: 'from mobile app' });
+  }, [send]);
+
+  // subscribe to pong message
+  useSubscribe('Test.pong', async (data) => {
+    console.log('Pong received', data);
+
+    // blink background
+    setPongReceived(true);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setPongReceived(false);
+  }, [setPongReceived]);
+
+  if (!settings) return <div>Loading settings...</div>
+  if (!connected) return <div>Connecting...</div>
+
+  return (
+    <Container active={pongReceived}>
+      <Button onClick={ping}>Ping</Button>
+    </Container>
+  );
+}
+
+const Container = styled.div<{ active: Boolean }>`
+  width: 100vw; 
+  height: 100vh; 
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  background: ${(({ active }) => active ? 'green' : "white")}
+`;
+
+const Button = styled.button`
+  width: 50vw;
+  height: 50vh;
+`;
+
+export default App;
