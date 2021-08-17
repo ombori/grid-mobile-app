@@ -5,7 +5,7 @@ import { useStatus, useSubscribe, usePublish, setSpaceId } from '@ombori/ga-mess
 import { Settings } from './schema';
 
 // connect to anonymous message bus on the same grid-os host
-setSpaceId(`$samehost/anonymous`);
+setSpaceId(`mobileapp`);
 
 function App() {
   const settings = useSettings<Settings>();
