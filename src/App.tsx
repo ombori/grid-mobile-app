@@ -1,22 +1,22 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { useSettings } from '@ombori/ga-settings';
-import { useStatus, useSubscribe, usePublish, setSpaceId } from '@ombori/ga-messaging';
+import { useStatus, useSubscribe, usePublish, setDefaultChannel } from '@ombori/ga-messaging';
 import { Settings } from './schema';
 
 // connect to anonymous message bus on the same grid-os host
-setSpaceId(`mobileapp`);
+setDefaultChannel(`mobileapp`);
 
 function App() {
   const settings = useSettings<Settings>();
   const connected = useStatus();
-  const send = usePublish();
+  const pub = usePublish();
   const [pongReceived, setPongReceived] = useState<Boolean>(false);
 
   // send ping message when button is pressed
   const ping = useCallback(() => {
-    send('Test.ping', { hello: 'from mobile app' });
-  }, [send]);
+    pub('Test.ping', { hello: 'from mobile app' });
+  }, [pub]);
 
   // subscribe to pong message
   useSubscribe('Test.pong', async (data) => {
